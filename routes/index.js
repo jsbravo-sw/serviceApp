@@ -5,15 +5,36 @@ const ObjectID = require("mongodb").ObjectID;
 
 /* GET home page. */
 
+
+/*
+Recomiendo utilizar varios routes en vez de sólo el del index.js y manejarlos según el modelo/rol de la página.
+Por ejemplo:
+  Un archivo llamado:
+    empleado.js
+  En empleado.js:
+    router.post("/register", (req, res) => {...})
+  Y en app.js:
+    const empleadoRouter = require("./routes/empleado");
+    app.use("/empleado", empleadoRouter);
+  De manera que la ruta queda:
+  "/register/empleado" y así pueden manejar de mejor manera las rutas y con más sentido.
+  
+  
+  Por otra parte, recomiendo utilizar la asignación desestructurante 
+  https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Operadores/Destructuring_assignment
+  
+*/
 router.post("/registerEmpleado", (req, res) => {
+  //Asignación desestructurante de ES6
+  const {username, ocupacion, experiencia} = req.body;
   mu.passport
-    .cambiarTipo(req.user[0].email, "Empleado", req.body.username)
+    .cambiarTipo(req.user[0].email, "Empleado", username)
     .then(
       mu.passport
         .registerEmpleado(
-          req.body.username,
-          req.body.ocupacion,
-          req.body.experiencia
+          username,
+          ocupacion,
+          experiencia
         )
         .then(res.redirect("/"))
     );
