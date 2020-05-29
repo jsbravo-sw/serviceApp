@@ -1,5 +1,9 @@
 const WebSocket = require("ws");
 
+
+/*
+Tengan cuidado cuando un cliente se desconecta, pues notificarlo (aunque esté desconectado) no tiene sentido.
+*/
 function WebSocketUtils() {
   const wsu = {};
   let clients = [];
@@ -12,6 +16,11 @@ function WebSocketUtils() {
       clients.push(ws);
       console.log("Clients", clients.length);
     });
+   ws.on('close', function close(ws) {
+  console.log('disconnected');
+     clients = clients.filter(e => e !== ws);
+  });
+    
   };
 
   wsu.notifyAll = (data) => {
